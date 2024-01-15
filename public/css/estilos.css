@@ -1,0 +1,11 @@
+a{
+    color:white;
+    font-size: 30px;
+    background-color: black;
+}
+h1 a{
+    background-color: darkmagenta;
+}
+img{
+    float: right;
+}
