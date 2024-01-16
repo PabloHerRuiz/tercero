@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\AutorRepository;
+use App\Repository\LibroRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AutorRepository::class)]
-class Autor
+#[ORM\Entity(repositoryClass: LibroRepository::class)]
+class Libro
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,12 +18,12 @@ class Autor
     #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
-    #[ORM\ManyToMany(targetEntity: Libro::class, mappedBy: 'autor')]
-    private Collection $libros;
+    #[ORM\ManyToMany(targetEntity: Autor::class, inversedBy: 'libros')]
+    private Collection $autor;
 
     public function __construct()
     {
-        $this->libros = new ArrayCollection();
+        $this->autor = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,28 +44,25 @@ class Autor
     }
 
     /**
-     * @return Collection<int, Libro>
+     * @return Collection<int, Autor>
      */
-    public function getLibros(): Collection
+    public function getAutor(): Collection
     {
-        return $this->libros;
+        return $this->autor;
     }
 
-    public function addLibro(Libro $libro): static
+    public function addAutor(Autor $autor): static
     {
-        if (!$this->libros->contains($libro)) {
-            $this->libros->add($libro);
-            $libro->addAutor($this);
+        if (!$this->autor->contains($autor)) {
+            $this->autor->add($autor);
         }
 
         return $this;
     }
 
-    public function removeLibro(Libro $libro): static
+    public function removeAutor(Autor $autor): static
     {
-        if ($this->libros->removeElement($libro)) {
-            $libro->removeAutor($this);
-        }
+        $this->autor->removeElement($autor);
 
         return $this;
     }
