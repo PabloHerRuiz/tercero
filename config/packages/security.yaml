@@ -22,7 +22,6 @@ security:
                 check_path: app_login
                 default_target_path: prueba
             logout:
-                
                 target: app_login
 
             # activate different ways to authenticate
