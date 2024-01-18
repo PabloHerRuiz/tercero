@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ver producto{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center; color: #5a6268;">{{ producto.nombre }}</h1>
+    <p style="font-size: 18px; color: #6c757d;">Precio: {{ producto.precio }}</p>
+    <p style="font-size: 18px; color: #6c757d;">Descripción: {{ producto.descripcion }}</p>
+    <p style="font-size: 18px; color: #6c757d;">Categoría: {{ producto.categoria }}</p>
+
+    <button onclick="location.href='{{ path('edit_product', {'id': producto.id}) }}'" style="background-color: #ffc107; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Editar</button>
+
+    <form method="post" action="{{ path('delete_product', {'id': producto.id}) }}" style="display: inline-block;">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ producto.id) }}">
+        <button type="submit" style="background-color: #f44336; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Eliminar</button>
+    </form>
+
+    <button onclick="location.href='{{ path('listado_productos') }}'" style="background-color: #28a745; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Volver al listado</button>
+{% endblock %}

@@ -14,23 +14,94 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
 {
-    #[Route('/producto', name: 'create_product')]
-    public function createProduct(EntityManagerInterface $entityManager): Response
+    #[Route('/listado', name: 'listado_productos')]
+    public function listProduct(EntityManagerInterface $entityManager): Response
     {
-        $producto = new Producto();
-        $producto->setNombre('Keyboard');
-        $producto->setPrecio(1999);
-        $producto->setDescripcion('Ergonomic and stylish!');
-        $producto->setCantidad(25);
+        $producto = $entityManager->getRepository(Producto::class)->findAll();   
 
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($producto);
-
-        // actually executes the queries (i.e. the INSERT query)
         $entityManager->flush();
 
-        return new Response('Saved new product with id '.$producto->getId());
+        return $this->render('product/list.html.twig',[
+            "productos" => $producto,
+        ]);
     }
+
+    //CRUD
+    #[Route('/producto', name: 'create_product', methods: ['GET','POST'])]
+    public function createProduct(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $producto = new Producto();
+        $form = $this->createForm(ProductoType::class, $producto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($producto);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('listado_productos');
+        }
+
+        return $this->render('product/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/producto/{id}', name: 'read_product', methods: ['GET'])]
+    public function readProduct(Producto $producto): Response
+    {
+        return $this->render('product/show.html.twig', [
+            'producto' => $producto,
+        ]);
+    }
+
+    #[Route('/producto/{id}/edit', name: 'edit_product', methods: ['GET', 'POST'])]
+    public function editProduct(Request $request, Producto $producto, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ProductoType::class, $producto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('listado_productos');
+        }
+
+        return $this->render('product/edit.html.twig', [
+            'producto' => $producto,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/producto/{id}', name: 'delete_product', methods: ['POST'])]
+    public function deleteProduct(Request $request, Producto $producto, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$producto->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($producto);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('listado_productos');
+    }
+
+
+
+    // #[Route('/producto', name: 'create_product')]
+    // public function createProduct(EntityManagerInterface $entityManager): Response
+    // {
+    //     $producto = new Producto();
+    //     $producto->setNombre('Keyboard');
+    //     $producto->setPrecio(1999);
+    //     $producto->setDescripcion('Ergonomic and stylish!');
+    //     $producto->setCantidad(25);
+
+    //     // tell Doctrine you want to (eventually) save the Product (no queries yet)
+    //     $entityManager->persist($producto);
+
+    //     // actually executes the queries (i.e. the INSERT query)
+    //     $entityManager->flush();
+
+    //     return new Response('Saved new product with id '.$producto->getId());
+    // }
 
     #[Route('/producto/categoria', name: 'asignar_categoria')]
     public function asignarCat(EntityManagerInterface $entityManager): Response
@@ -73,17 +144,17 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/producto/{categoria}', name: 'listado_prod')]
-    public function listProd($categoria,EntityManagerInterface $entityManager): Response
-    {
-        $producto=$entityManager->getRepository(Producto::class)->findBy(['Categoria' => $categoria]);
+    // #[Route('/producto/{categoria}', name: 'listado_prod')]
+    // public function listProd($categoria,EntityManagerInterface $entityManager): Response
+    // {
+    //     $producto=$entityManager->getRepository(Producto::class)->findBy(['Categoria' => $categoria]);
         
 
-        $entityManager->flush();
+    //     $entityManager->flush();
 
-        return $this->render('product/index.html.twig',[
-            "producto" => $producto,
-        ]);
-    }
+    //     return $this->render('product/index.html.twig',[
+    //         "producto" => $producto,
+    //     ]);
+    // }
     
 }

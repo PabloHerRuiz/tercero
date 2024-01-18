@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear producto{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center; color: #5a6268;">Crear producto</h1>
+
+    <div style="width: 50%; margin: 0 auto;">
+        {{ form_start(form, {'attr': {'style': 'display: flex; flex-direction: column; gap: 10px;'}}) }}
+            {{ form_widget(form, {'attr': {'style': 'padding: 10px; font-size: 16px;'}}) }}
+            <button type="submit" style="background-color: #28a745; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Crear</button>
+        {{ form_end(form) }}
+    </div>
+
+    <button onclick="location.href='{{ path('listado_productos') }}'" style="background-color: #6c757d; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Volver al listado</button>
+{% endblock %}

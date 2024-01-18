@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de productos{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center; color: #5a6268;">Listado de productos</h1>
+
+    <a href="{{ path('create_product') }}" style="display: inline-block; background-color: #28a745; color: white; padding: 10px 20px; text-align: center; text-decoration: none; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Agregar producto</a>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 10px; border: 1px solid #dee2e6;">Nombre</th>
+                <th style="padding: 10px; border: 1px solid #dee2e6;">Precio</th>
+                <th style="padding: 10px; border: 1px solid #dee2e6;">Descripción</th>
+                <th style="padding: 10px; border: 1px solid #dee2e6;">Categoría</th>
+                <th style="padding: 10px; border: 1px solid #dee2e6;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">{{ producto.nombre }}</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">{{ producto.precio }}</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">{{ producto.descripcion }}</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">{{ producto.categoria }}</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">
+                        <button onclick="location.href='{{ path('read_product', {'id': producto.id}) }}'" style="background-color: #007bff; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Ver</button>
+                        <button onclick="location.href='{{ path('edit_product', {'id': producto.id}) }}'" style="background-color: #ffc107; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Editar</button>
+
+                        <form method="post" action="{{ path('delete_product', {'id': producto.id}) }}" style="display: inline-block;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ producto.id) }}">
+                            <button type="submit" style="background-color: #f44336; color: white; border: none; cursor: pointer; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; transition-duration: 0.4s;">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
