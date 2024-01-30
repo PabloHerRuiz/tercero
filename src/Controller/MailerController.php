@@ -7,22 +7,19 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class MailerController extends AbstractController
 {
     #[Route('/email', name: 'email')]
     public function mandarCorreo(MailerInterface $mailer): Response
     {
-
         $email = (new Email())
-            ->from('
-            ')
-            ->to('
-            ')
-            ->subject('Prueba de correo')
-            ->text('Probando el envio de correo desde symfony')
-            ->html('<p>Probando el envio de correo desde symfony</p>');
-        
+            ->from('pihogpi@kinsta.com')
+            ->to('pherrui680@g.educaand.es')
+            ->subject('Hey, I’m Pi Hog Pi!')
+            ->text('Hello, MailHog!');
+
+        $mailer->send($email);
+
         return new Response('Email enviado');
     }
 }
