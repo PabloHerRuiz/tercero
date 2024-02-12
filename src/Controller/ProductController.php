@@ -35,8 +35,12 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try{
             $entityManager->persist($producto);
             $entityManager->flush();
+            }catch(\Exception $e){
+                return $this->redirectToRoute('listado_productos');
+            }
 
             return $this->redirectToRoute('listado_productos');
         }

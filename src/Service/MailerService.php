@@ -28,4 +28,17 @@ class MailerService
         $this->mailer->send($email);
         return true;
     }
+    public function emailDestinatario($destinatario): bool
+    {
+        $happyMessage = $this->messageGenerator->getHappyMessage();
+
+        $email = (new Email())
+            ->from($this->adminEmail)
+            ->to($destinatario)
+            ->subject('Site update just happened!')
+            ->text('Someone just updated the site. We told them: '.$happyMessage);
+
+        $this->mailer->send($email);
+        return true;
+    }
 }
